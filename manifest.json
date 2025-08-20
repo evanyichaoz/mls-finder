@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Listing Parser",
+  "version": "1.0",
+  "description": "点击按钮解析网页中的卧室、浴室和地址",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
