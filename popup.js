@@ -90,6 +90,23 @@ function extractData() {
     }
   });
 
+  // Price
+  const priceElement = document.querySelector('h3.listing-prop-price span.detail-price');
+  let price = null;
+  let soldPrice = null;
+  if (priceElement) {
+    const priceText = priceElement.innerText;
+    // Remove non-numeric characters (like '$' and ',') and parse as a number
+    const numericPrice = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+    if (!isNaN(numericPrice)) {
+      if (status === 2) { // If status is 'sold'
+        soldPrice = numericPrice;
+      } else {
+        price = numericPrice;
+      }
+    }
+  }
+
   // Photo
   const photoElement = document.querySelector('#detail-photos img.detail-photo');
 
@@ -102,6 +119,8 @@ function extractData() {
     city: city,
     province: province,
     postCode: postCode,
+    price: price,
+    soldPrice: soldPrice,
     status: status,
     photo: photoElement ? photoElement.src : null,
     parking: parkingElement ? parkingElement.innerText.trim() : null,
