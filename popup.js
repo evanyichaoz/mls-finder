@@ -91,18 +91,46 @@ function extractData() {
   });
 
   // Price
-  const priceElement = document.querySelector('h3.listing-prop-price span.detail-price');
+  const soldTagElement = document.querySelector('span.soldRedTag');
   let price = null;
   let soldPrice = null;
-  if (priceElement) {
-    const priceText = priceElement.innerText;
-    // Remove non-numeric characters (like '$' and ',') and parse as a number
-    const numericPrice = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-    if (!isNaN(numericPrice)) {
-      if (status === 2) { // If status is 'sold'
-        soldPrice = numericPrice;
-      } else {
-        price = numericPrice;
+
+  if (soldTagElement) {
+    // --- SOLD CASE ---
+    // This is the primary indicator for a sold property.
+    status = 2;
+
+    // Sold price is in the main price element
+    const soldPriceElement = document.querySelector('h3.listing-prop-price span.detail-price');
+    if (soldPriceElement) {
+      const soldPriceText = soldPriceElement.innerText;
+      const numericSoldPrice = parseFloat(soldPriceText.replace(/[^0-9.]/g, ''));
+      if (!isNaN(numericSoldPrice)) {
+        soldPrice = numericSoldPrice;
+      }
+    }
+
+    // Asking price is in the h6 element
+    const askingPriceElement = document.querySelector('h6.detail-lp');
+    if (askingPriceElement) {
+      const askingPriceText = askingPriceElement.innerText;
+      const numericAskingPrice = parseFloat(askingPriceText.replace(/[^0-9.]/g, ''));
+      if (!isNaN(numericAskingPrice)) {
+        price = numericAskingPrice;
+      }
+    }
+  } else {
+    // --- FOR SALE (or other status) CASE ---
+    const priceElement = document.querySelector('h3.listing-prop-price span.detail-price');
+    if (priceElement) {
+      const priceText = priceElement.innerText;
+      const numericPrice = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+      if (!isNaN(numericPrice)) {
+        if (status === 2) { // Status from summary is 'sold'
+          soldPrice = numericPrice;
+        } else {
+          price = numericPrice;
+        }
       }
     }
   }
